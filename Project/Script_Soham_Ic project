@@ -1,0 +1,104 @@
+IC Project Script (Soham)
+
+Problem Statement:
+
+The main motive of the information retreival system is to extract data\info while keeping its info content intact and this is achieved by a very intuitive process called Query generation. Notably, this is one of the most important steps\processes of any information retreival scheme beacuse in determining the way the data is extracted, efficiency and speed of the process and feasibilty of the scheme, the choice of a query generation technique plays a huge role!
+
+The very idea of Private information retrieval roots from the exploration of the possible ways of generating queries. 
+
+The queries herein are generated while upholding the privacy in terms of the message being retrieved, i.e, the servers (or databases) must not come to know in any sort about what is being asked for. 
+
+
+Suppose we have K independent messages and without any loss of generality let they be named as W1, w2, ..., wk. Additionally, let there be N databases containing K messages each
+
+And let us define these k independent messages such that each of them is of length L. Which implies that the information content of each of these messages is L bits. Mathematically, this can be represented as entropy H(wi) of each message.
+
+Now, let there be a user who wishes to extract some message W(theta) and to make the process come to fruition, the user generates a query (theta) 
+With K different messages available, the user can come up with K different strategies!
+
+As was discussed earlier, to ensure privacy, the most intuitive way will be to bombard the system of databases, all of them, with queries. That is, the queries must be generated such that they are distributed uniformly across all databases. This is done so as to make sure that none of the databases comes to know "exactly" about the message that the user wishes to retrieve
+Thus, the user generates N messages
+
+Now the user does not know before hand about the structure of the message, and therefore the queries it generates are a random permutation of the message to be retrieved
+
+nth query goes to the nth database the response of which is completely dependent on the query, and the message bits present in that database
+And finally with all the answer bits now with the user, the user estimates the message!
+
+Our aim in this process is to find the capacity of this PIR scheme.
+But before that, Rate in PIR is defined as number of desired information bits per downloaded bit
+There are two possible types of rates  - zero error achievable which refers to the rate achieved in such a scheme where the possibility of error is zero, thus there is a clearly laid-out decoding mechanism which uniquely estimates the message. And the second one is epsilon-error achievability which roots from the Shannon Channel Coding Theorem.
+
+Clearly, in noise less channels, both the errors are same!
+
+Therefore, we aim to estabilish what are the zero-error and epsilon-error rates capacities of the PIR scheme
+
+
+EXAMPLE:
+Let us use this animation to understand how a PIR scheme works and its rate and thus the capacity will be discussed in the following slides
+
+Lets take an example where we have N = 2 databases and each database contains K = 2 messages
+Now in the scheme that we had previously discussed in the problem statement, we had take L = N^k so here as well, L will 4 bits per message
+
+Say there are these two types of messages, we will name the top one as W1 and the bottom one as W2, and therefore each database can be expressed as a matrix with rows representing the messages
+
+In our case, we have n = 2 databases and as we have already seen, the databases must be identical in terms of the messages that they hold.
+Our aim here is to extract or retrieve, lets say, message W1 by using both the databases. Therefore, we come up with some random permutation of W1 as shown.
+Now, since our aim is to extract the message from this permutation, our new desired sequence of bits will be the random permutated version of W1, that will be further decoded to make an extimate of W1
+
+Let us name these databases as Db1 and Db2
+
+We know that for K different messages, there are K different strategies to generate a query, which we will make use of by creating a similar random permuation of message W2 alongside that of W1
+
+Now comes the iterative process of PIR where we make use of the three principles to ensure privacy -
+	1. Db symmetry
+	2. msg symmetry
+	3. exploiting side info
+
+Starting with Db symmetry, we first demand the first bit of random permutation of W1 from Db1, by passing a query and multiplying it with the database. In order to uphold database symmetry, we now demand the second bit a2 from Db2. This step ensures that the server containing Db1 or Db2 is not able to fully understand what the user exactly is trying to retrieve, thereby ensuring privacy. 
+But this is not sufficient, since the server still kind of has an estimate of which message you may be aiming to extract.
+
+Therefore, next comes msg symmetry
+as earlier we had started with first bit of random permutation of W1 followed by the second bit, now we do the same process with the random permuation of W2, by first demanding b1 from Db1 and then b2 from Db2. 
+
+Note that in this iterative process of achieving our PIR scheme, it is necessary to make sure that while performing a particular iterative step, the previous iterative principles are upheld. For instance, while performing msg symmetry, db symmetry must not be compromised with
+
+Still, the databases will come to know about the message when we further ask for queries, by taking into account the "order" of queries. 
+
+But if you observe, we already have two bits b1 and b2 which are not a part of the message that we originally want to retrieve. So we can exploit that side information to extract further bits
+
+Therefore comes the step of Exploing Side info 
+
+We use the message bit b2 extracted from Db2 (so it is previously unknown to db1 in its set of queries) and form a query in such a way that we demand b2 + a3 from Db1. (plus in our case means an will mean throughout the video as bit-wise xor). Similarly, we utilise the bit b1 earlier extracted from db1 to demand b1 + a4 from Db2.
+
+finally, after the entire process we realise that we have already obtained all the bits of message W1.
+so, information we are now left with is a1, a2, b1, b2, b1+a4 and b2+a3.
+
+Now to verify correctness, realise that each bit is either extracted directly, or has been retrieved by adding it with some other side information. Thus, the directly extracted ones can be kept as they are, but for the added ones, we already know with which info they are added, so we subtract the added bit (subtract in our case means re-xoring re-adding the same bit to the ans) from the answer to get the desired bit.
+
+thus a1 and a2 will remain as they are. we xor b2+a3 with b2 to get a3
+and similarly we xor b1+a4 with b1 to get a4
+
+we finally have a1, a2, a3, a4
+
+//end//
+
+Outcome of example:
+Note that in the earlier example,
+Privacy is ensured by the fact that [a1 , a2 , a3 , a4 ] is a random
+permutation of W1 and [b1 , b2 , b3 , b4 ] is an independent ran-
+dom permutation of W2 . These permutations are only known
+to the user and not to the databases. Therefore, regardless of
+the desired message, each database is asked for one randomly
+chosen bit of each message and a sum of a different pair of
+randomly chosen bits from each message. Since the permuta-
+tions are uniform, all possible realizations are equally likely,
+and privacy is guaranteed.
+
+and since in our PIR scheme where rate and capacity are equal, (because the query structure has uniform distribution and also due to our assumption that L = N^k), it is sufficient to find the rate for the scheme
+
+therefore, required info bits = 4 and total downloaded bits = 6
+so R = 4/6 = 0.667
+
+which implies (while also keeping in mind the noise-less model) that zero and epsilon error capacities are equal to 0.667
+
+
